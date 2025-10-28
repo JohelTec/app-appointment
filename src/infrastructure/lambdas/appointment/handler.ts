@@ -152,24 +152,3 @@ export const appointment: APIGatewayProxyHandler = async (event: any) => {
   };
 };
 
-export const listAppointments: APIGatewayProxyHandler = async () => {
-  try {
-    const command = new ScanCommand({ TableName: "Appointment" });
-    const { Items } = await dynamoDB.send(command);
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify(Items),
-    };
-  } catch (error) {
-    console.error("Error al listar citas:", error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        message: "Error interno al listar citas",
-        error: (error as Error).message,
-      }),
-    };
-  }
-};
-

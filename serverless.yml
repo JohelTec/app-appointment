@@ -64,7 +64,7 @@ functions:
   Appointment:
     handler: src/infrastructure/lambdas/appointment/handler.appointment
     environment:
-      APPPOINTMENT_TABLE: 
+      APPOINTMENT_TABLE: 
         Ref: AppointmentTable
     events:
       - httpApi:
@@ -77,20 +77,9 @@ functions:
           arn:
             Fn::GetAtt: [AppointmentResultQueue, Arn]
 
-  # Lambda para listar citas
-  listAppointments:
-    handler: src/infrastructure/lambdas/appointment/handler.listAppointments
-    environment:
-      APPPOINTMENT_TABLE: 
-        Ref: AppointmentTable
-    events:
-      - httpApi:
-          path: /list-appointment
-          method: get
-
   # Lambda guardar cita en MySQL Perú
   AppointmentPE:
-    handler: src/infrastructure/lambdas/appointmentPe/handler.appointmentPE
+    handler: src/infrastructure/lambdas/appointmentPE/handler.appointmentPE
     environment:
       DB_HOST: db-mysql-pe.col66wciwk0h.us-east-1.rds.amazonaws.com
       DB_USER: admin
