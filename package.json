@@ -6,14 +6,20 @@
     "remove": "serverless remove",
     "invoke": "serverless invoke -f hello",
     "logs": "serverless logs -f hello --tail",
-    "offline": "serverless offline"
+    "offline": "serverless offline",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.156",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.9.1",
+    "jest": "^30.2.0",
     "serverless-esbuild": "^1.52.1",
     "serverless-offline": "^12.0.4",
     "serverless-plugin-typescript": "^2.1.5",
+    "ts-jest": "^29.4.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   },

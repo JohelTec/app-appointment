@@ -1,15 +1,38 @@
 {
-  "compilerOptions": 
-  {
+  "compilerOptions": {
+    /* Salida y compatibilidad */
     "target": "ES2020",
     "module": "commonjs",
     "rootDir": "src",
     "outDir": "dist",
+
+    /* Calidad del código */
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "sourceMap": true
+
+    /* Soporte para depuración */
+    "sourceMap": true,
+
+    /* Requerido por Jest y ts-jest */
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+
+    /* Alias para imports absolutos */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
-  "include": ["src/**/*.ts"]
+
+  "include": [
+    "src/**/*.ts",
+    "tests/**/*.ts"   // Importante: permite que Jest lea tus tests
+  ],
+
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
