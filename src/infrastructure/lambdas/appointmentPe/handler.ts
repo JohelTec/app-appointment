@@ -1,10 +1,11 @@
 
+import { SQSEvent, } from "aws-lambda";
 import mysql from "mysql2/promise";
 import { EventBridgeClient, PutEventsCommand } from "@aws-sdk/client-eventbridge";
 
 const eventBridge = new EventBridgeClient({ region: "us-east-1" });
 
-export const processPE = async (event: any) => {
+export const appointmentPE = async (event: SQSEvent): Promise<void> => {
   const connection = await mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,

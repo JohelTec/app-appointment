@@ -13,18 +13,39 @@ provider:
   iam:
     role:
       statements:
+        # Permisos para DynamoDB
         - Effect: Allow
           Action:
             - dynamodb:PutItem
             - dynamodb:GetItem
             - dynamodb:Scan
             - dynamodb:Query
-            - sns:Publish
-            - sqs:SendMessage
-            - events:PutEvents
             - dynamodb:UpdateItem
-            - dynamodb:GetItem
-          Resource: "*" # escpecificar los recurssos
+          Resource:
+            - !GetAtt AppointmentTable.Arn
+
+        # Permisos para publicar en SNS
+        - Effect: Allow
+          Action:
+            - sns:Publish
+          Resource:
+            - !Ref AppointmentTopic
+
+        # Permisos para enviar mensajes a SQS
+        - Effect: Allow
+          Action:
+            - sqs:SendMessage
+          Resource:
+            - !GetAtt SqsPE.Arn
+            - !GetAtt SqsCL.Arn
+            - !GetAtt AppointmentResultQueue.Arn
+
+        # Permisos para enviar eventos a EventBridge
+        - Effect: Allow
+          Action:
+            - events:PutEvents
+          Resource:
+            - arn:aws:events:${self:provider.region}:${aws:accountId}:event-bus/default
 
 plugins:
   - serverless-esbuild
@@ -38,29 +59,25 @@ custom:
       - aws-sdk
 
 functions:
-  NewAppointment:
-    handler: src/infrastructure/lambdas/appointment/handler.newAppointment
+  # Lambda para agendar cita
+  # Lambda para y vertificar el estado de cita
+  Appointment:
+    handler: src/infrastructure/lambdas/appointment/handler.appointment
     environment:
       APPPOINTMENT_TABLE: 
         Ref: AppointmentTable
     events:
       - httpApi:
-          path: /new-appointment
+          path: /appointment
           method: post
+      - httpApi:
+          path: /appointment/{insuredId}
+          method: get
       - sqs:
           arn:
             Fn::GetAtt: [AppointmentResultQueue, Arn]
 
-  GetAppointment:
-    handler: src/infrastructure/lambdas/appointment/handler.getAppointment
-    environment:
-      APPPOINTMENT_TABLE: 
-        Ref: AppointmentTable
-    events:
-      - httpApi:
-          path: /appointments/{id}
-          method: get
-
+  # Lambda para listar citas
   listAppointments:
     handler: src/infrastructure/lambdas/appointment/handler.listAppointments
     environment:
@@ -71,8 +88,9 @@ functions:
           path: /list-appointment
           method: get
 
-  processPE:
-    handler: src/infrastructure/lambdas/appointmentPe/handler.processPE
+  # Lambda guardar cita en MySQL Perú
+  AppointmentPE:
+    handler: src/infrastructure/lambdas/appointmentPe/handler.appointmentPE
     environment:
       DB_HOST: db-mysql-pe.col66wciwk0h.us-east-1.rds.amazonaws.com
       DB_USER: admin
@@ -83,8 +101,9 @@ functions:
           arn:
             Fn::GetAtt: [SqsPE, Arn]
 
-  processCL:
-    handler: src/infrastructure/lambdas/appointmentCL/handler.processCL
+  # Lambda guardar cita en MySQL Chile
+  AppointmentCL:
+    handler: src/infrastructure/lambdas/appointmentCL/handler.appointmentCL
     environment:
       DB_HOST: db-mysql-cl.col66wciwk0h.us-east-1.rds.amazonaws.com
       DB_USER: admin
@@ -97,6 +116,7 @@ functions:
 
 resources:
   Resources:
+    # DynamoDB Table para citas
     AppointmentTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -109,23 +129,25 @@ resources:
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
 
+    # SNS Topic para citas
     AppointmentTopic:
       Type: AWS::SNS::Topic
       Properties:
         TopicName: AppointmentTopic
 
+    # SQS Queues para Perú
     SqsPE:
       Type: AWS::SQS::Queue
       Properties:
         QueueName: appointment_pe
 
+    # SQS Queues para Chile
     SqsCL:
       Type: AWS::SQS::Queue
       Properties:
         QueueName: appointment_cl
 
-    
-
+    # Suscripciones SNS a SQS Perú
     SnsSubscriptionPE:
       Type: AWS::SNS::Subscription
       Properties:
@@ -136,6 +158,7 @@ resources:
           countryISO:
             - "PE"
 
+    # Suscripciones SNS a SQS Chile
     SnsSubscriptionCL:
       Type: AWS::SNS::Subscription
       Properties:
@@ -146,11 +169,13 @@ resources:
           countryISO:
             - "CL"
 
+    # SQS Queue para resultados de procesamiento de citas
     AppointmentResultQueue:
       Type: AWS::SQS::Queue
       Properties:
         QueueName: appointment_result
 
+    # Permiso para que EventBridge pueda enviar mensajes a la SQS de resultados
     AppointmentResultQueuePolicy:
       Type: AWS::SQS::QueuePolicy
       Properties:
@@ -165,6 +190,7 @@ resources:
               Action: sqs:SendMessage
               Resource: !GetAtt AppointmentResultQueue.Arn
 
+    # Regla de EventBridge para enrutar eventos a la SQS de resultados
     AppointmentEventRule:
       Type: AWS::Events::Rule
       Properties:
