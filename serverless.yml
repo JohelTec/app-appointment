@@ -1,0 +1,178 @@
+service: app-appointment
+frameworkVersion: '3'
+configValidationMode: error
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    TABLE_NAME: Appointment
+    TOPIC_ARN:
+      Ref: AppointmentTopic
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:Scan
+            - dynamodb:Query
+            - sns:Publish
+            - sqs:SendMessage
+            - events:PutEvents
+            - dynamodb:UpdateItem
+            - dynamodb:GetItem
+          Resource: "*" # escpecificar los recurssos
+
+plugins:
+  - serverless-esbuild
+
+custom:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    external:
+      - aws-sdk
+
+functions:
+  NewAppointment:
+    handler: src/infrastructure/lambdas/appointment/handler.newAppointment
+    environment:
+      APPPOINTMENT_TABLE: 
+        Ref: AppointmentTable
+    events:
+      - httpApi:
+          path: /new-appointment
+          method: post
+      - sqs:
+          arn:
+            Fn::GetAtt: [AppointmentResultQueue, Arn]
+
+  GetAppointment:
+    handler: src/infrastructure/lambdas/appointment/handler.getAppointment
+    environment:
+      APPPOINTMENT_TABLE: 
+        Ref: AppointmentTable
+    events:
+      - httpApi:
+          path: /appointments/{id}
+          method: get
+
+  listAppointments:
+    handler: src/infrastructure/lambdas/appointment/handler.listAppointments
+    environment:
+      APPPOINTMENT_TABLE: 
+        Ref: AppointmentTable
+    events:
+      - httpApi:
+          path: /list-appointment
+          method: get
+
+  processPE:
+    handler: src/infrastructure/lambdas/appointmentPe/handler.processPE
+    environment:
+      DB_HOST: db-mysql-pe.col66wciwk0h.us-east-1.rds.amazonaws.com
+      DB_USER: admin
+      DB_PASSWORD: Admin123
+      DB_NAME: appointments_pe
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt: [SqsPE, Arn]
+
+  processCL:
+    handler: src/infrastructure/lambdas/appointmentCL/handler.processCL
+    environment:
+      DB_HOST: db-mysql-cl.col66wciwk0h.us-east-1.rds.amazonaws.com
+      DB_USER: admin
+      DB_PASSWORD: Admin123
+      DB_NAME: appointments_cl
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt: [SqsCL, Arn]
+
+resources:
+  Resources:
+    AppointmentTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Appointment
+        AttributeDefinitions:
+          - AttributeName: insuredId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: insuredId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    AppointmentTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: AppointmentTopic
+
+    SqsPE:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: appointment_pe
+
+    SqsCL:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: appointment_cl
+
+    
+
+    SnsSubscriptionPE:
+      Type: AWS::SNS::Subscription
+      Properties:
+        TopicArn: !Ref AppointmentTopic
+        Protocol: sqs
+        Endpoint: !GetAtt SqsPE.Arn
+        FilterPolicy:
+          countryISO:
+            - "PE"
+
+    SnsSubscriptionCL:
+      Type: AWS::SNS::Subscription
+      Properties:
+        TopicArn: !Ref AppointmentTopic
+        Protocol: sqs
+        Endpoint: !GetAtt SqsCL.Arn
+        FilterPolicy:
+          countryISO:
+            - "CL"
+
+    AppointmentResultQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: appointment_result
+
+    AppointmentResultQueuePolicy:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        Queues:
+          - !Ref AppointmentResultQueue
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service: events.amazonaws.com
+              Action: sqs:SendMessage
+              Resource: !GetAtt AppointmentResultQueue.Arn
+
+    AppointmentEventRule:
+      Type: AWS::Events::Rule
+      Properties:
+        Name: AppointmentEventRule
+        EventPattern:
+          source:
+            - "appointment.processor"
+        Targets:
+          - Arn: !GetAtt AppointmentResultQueue.Arn
+            Id: "SendToResultQueue"
+

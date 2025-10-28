@@ -1,0 +1,30 @@
+{
+  "name": "serverless-ts-app",
+  "version": "1.0.0",
+  "scripts": {
+    "deploy": "serverless deploy",
+    "remove": "serverless remove",
+    "invoke": "serverless invoke -f hello",
+    "logs": "serverless logs -f hello --tail",
+    "offline": "serverless offline"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.156",
+    "@types/node": "^24.9.1",
+    "serverless-esbuild": "^1.52.1",
+    "serverless-offline": "^12.0.4",
+    "serverless-plugin-typescript": "^2.1.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.917.0",
+    "@aws-sdk/client-sns": "^3.917.0",
+    "@aws-sdk/lib-dynamodb": "^3.917.0",
+    "aws-lambda": "^1.0.7",
+    "mysql2": "^3.15.3"
+  },
+  "resolutions": {
+    "serverless": "3.x"
+  }
+}
