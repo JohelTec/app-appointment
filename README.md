@@ -15,8 +15,7 @@ Una descripción más detallada y técnica del proyecto, incluyendo sus principa
 
 ## 🖼️ Visuales
 
-| Vista principal       | 
-| ![main](public/cloud.png) | 
+ ![main](public/cloud.png) 
 
 ---
 
