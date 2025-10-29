@@ -6,11 +6,9 @@
     "remove": "serverless remove",
     "invoke": "serverless invoke -f hello",
     "logs": "serverless logs -f hello --tail",
-    "offline": "serverless offline",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "dev": "set STAGE=dev && set AWS_REGION=us-east-1 && serverless offline start"
+    "test:coverage": "jest --coverage"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.156",
