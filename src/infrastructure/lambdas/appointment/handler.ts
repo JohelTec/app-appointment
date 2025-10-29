@@ -36,7 +36,7 @@ export const appointment: APIGatewayProxyHandlerV2 | any = async (event: any) =>
     switch (method) {
       case "POST": {
         const result = await createUC.execute(body);
-        return { statusCode: 201, body: JSON.stringify({ message: "Agendamiento en proceso" }) };
+        return { statusCode: 201, body: JSON.stringify({ message: "Agendamiento en proceso", data : result }) };
       }
 
       case "GET": {
