@@ -9,7 +9,7 @@ describe("GetAppointmentUseCase", () => {
 
   const useCase = new GetAppointmentUseCase(mockRepository as any);
 
-  it("debería retornar la cita cuando existe", async () => {
+  it("The appointment should return when it exists", async () => {
     const appointment = new Appointment("123", "PE", "CONFIRMED");
     mockRepository.findById.mockResolvedValue(appointment);
 
@@ -19,7 +19,7 @@ describe("GetAppointmentUseCase", () => {
     expect(mockRepository.findById).toHaveBeenCalledWith("123");
   });
 
-  it("debería lanzar NotFoundError si no existe", async () => {
+  it("It should throw NotFoundError if it doesn't exist", async () => {
     mockRepository.findById.mockResolvedValue(null);
 
     await expect(useCase.execute("999")).rejects.toThrow(NotFoundError);

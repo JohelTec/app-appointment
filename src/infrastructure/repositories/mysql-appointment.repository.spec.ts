@@ -14,12 +14,12 @@ describe("MySQLAppointmentRepository", () => {
     jest.clearAllMocks();
   });
 
-  it("connect() debería crear la conexión", async () => {
+  it("Should create the connection", async () => {
     await repository.connect();
     expect(mysql.createConnection).toHaveBeenCalledTimes(1);
   });
 
-  it("save() debería ejecutar query con valores correctos", async () => {
+  it("Should run the query with the correct values.", async () => {
     await repository.connect();
     const appointment = new Appointment("123", "PE", "PENDING");
     await repository.save(appointment);
@@ -31,12 +31,12 @@ describe("MySQLAppointmentRepository", () => {
     expect(values[6]).toBe("PE");
   });
 
-  it("save() sin conexión debería lanzar error", async () => {
+  it("Without a connection, it should throw an error", async () => {
     const appointment = new Appointment("123", "PE", "PENDING");
     await expect(repository.save(appointment)).rejects.toThrow("Database not connected");
   });
 
-  it("close() debería cerrar la conexión", async () => {
+  it("Should close the connection", async () => {
     await repository.connect();
     await repository.close();
     expect(mockConnection.end).toHaveBeenCalledTimes(1);

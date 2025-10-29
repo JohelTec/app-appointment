@@ -13,7 +13,7 @@ describe("DynamoDBAppointmentRepository", () => {
     repository = new DynamoDBAppointmentRepository("AppointmentTest");
   });
 
-  it("save() debería insertar un appointment", async () => {
+  it("I should insert an appointment", async () => {
     const appointment = new Appointment("123", "PE", "PENDING");
 
     ddbMock.on(PutCommand).resolves({});
@@ -22,7 +22,7 @@ describe("DynamoDBAppointmentRepository", () => {
     expect(ddbMock.commandCalls(PutCommand).length).toBe(1);
   });
 
-  it("findById() debería devolver appointment existente", async () => {
+  it("Should return existing appointment", async () => {
     const appointment = new Appointment("123", "PE", "PENDING");
     ddbMock.on(GetCommand).resolves({ Item: appointment });
 
@@ -30,14 +30,14 @@ describe("DynamoDBAppointmentRepository", () => {
     expect(result).toEqual(appointment);
   });
 
-  it("findById() debería devolver null si no existe", async () => {
+  it("Should return null if it does not exist", async () => {
     ddbMock.on(GetCommand).resolves({ Item: undefined });
 
     const result = await repository.findById("999");
     expect(result).toBeNull();
   });
 
-  it("updateStatus() debería actualizar el estado", async () => {
+  it("Should update status", async () => {
     ddbMock.on(UpdateCommand).resolves({});
 
     await expect(repository.updateStatus("123", "COMPLETED")).resolves.toBeUndefined();

@@ -12,7 +12,7 @@ describe("SNSPublisher", () => {
     publisher = new SNSPublisher();
   });
 
-  it("Debería enviar un mensaje correctamente", async () => {
+  it("You should send a message correctly", async () => {
     const appointment = new Appointment("123", "PE", "PENDING");
 
     snsMock.on(PublishCommand).resolves({ MessageId: "msg-123" });
@@ -32,7 +32,7 @@ describe("SNSPublisher", () => {
     expect(call.MessageAttributes?.countryISO?.StringValue).toBe("PE");
   });
 
-  it("Debería lanzar un error si SNS falla", async () => {
+  it("It should throw an error if SNS fails", async () => {
     const appointment = new Appointment("456", "CL", "CONFIRMED");
 
     snsMock.on(PublishCommand).rejects(new Error("AWS SNS error"));

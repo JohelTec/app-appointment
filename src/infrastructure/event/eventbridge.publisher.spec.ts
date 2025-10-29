@@ -11,7 +11,7 @@ describe("EventBridgePublisher", () => {
     publisher = new EventBridgePublisher();
   });
 
-  it("Debería enviar un evento correctamente", async () => {
+  it("It should send an event correctly", async () => {
     const detail = { insuredId: "123", status: "COMPLETED", countryISO: "PE" };
 
     ebMock.on(PutEventsCommand).resolves({
@@ -31,7 +31,7 @@ describe("EventBridgePublisher", () => {
     expect(JSON.parse(callInput!.Entries![0].Detail!)).toEqual(detail);
   });
 
-  it("Debería lanzar un error si EventBridge falla", async () => {
+  it("It should throw an error if EventBridge fails", async () => {
     const detail = { insuredId: "456", status: "PENDING", countryISO: "CL" };
 
     ebMock.on(PutEventsCommand).rejects(new Error("AWS error"));

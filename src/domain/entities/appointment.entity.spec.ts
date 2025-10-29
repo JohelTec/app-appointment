@@ -1,7 +1,7 @@
 import { Appointment } from "./appointment.entity";
 
 describe("Appointment Entity", () => {
-  it("debería crear una instancia correctamente", () => {
+  it("Should create an instance correctly", () => {
     const appointment = new Appointment("123", "PE", "PENDING");
 
     expect(appointment.insuredId).toBe("123");
@@ -10,7 +10,7 @@ describe("Appointment Entity", () => {
     expect(appointment.date).toBeUndefined();
   });
 
-  it("debería crear una instancia desde JSON", () => {
+  it("Should create an instance from JSON", () => {
     const json = {
       insuredId: "456",
       countryISO: "US",

@@ -12,7 +12,7 @@ describe("UpdateStatusUseCase", () => {
 
   beforeEach(() => jest.clearAllMocks());
 
-  it("debería actualizar el estado correctamente", async () => {
+  it("The status should update correctly", async () => {
     const existing = new Appointment("123", "PE", "PEDING");
     mockRepository.findById.mockResolvedValue(existing);
     mockRepository.updateStatus.mockResolvedValue(undefined); // no retorna nada
@@ -23,7 +23,7 @@ describe("UpdateStatusUseCase", () => {
     expect(mockRepository.updateStatus).toHaveBeenCalledWith("123", "CONFIRMED");
   });
 
-  it("debería lanzar NotFoundError si la cita no existe", async () => {
+  it("It should throw NotFoundError if the quote does not exist", async () => {
     mockRepository.findById.mockResolvedValue(null);
 
     await expect(useCase.execute("999", "CANCELLED")).rejects.toThrow(NotFoundError);
