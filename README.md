@@ -1,19 +1,20 @@
-# 📌 Título del Proyecto
+# 📌 API Appointment
 
 Nombre autoexplicativo del proyecto, con una breve descripción clara y directa de lo que hace.
 
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
-![Coverage](https://img.shields.io/badge/coverage-95%25-blue)
+![Coverage](https://img.shields.io/badge/coverage-90.4%25-blue)
 
 ---
 
 ## 🧠 Descripción
 
-Una descripción más detallada y técnica del proyecto, incluyendo sus principales características, su propósito y cómo funciona.
+La **Appointment API** es un servicio RESTful diseñado para gestionar las citas de personas aseguradas. Esta API permite crear, recuperar y administrar citas a través de identificadores únicos (ID) de asegurados.
 
 ---
 
 ## 🖼️ Visuales
+
 
  ![main](public/cloud.png) 
 
@@ -23,33 +24,57 @@ Una descripción más detallada y técnica del proyecto, incluyendo sus principa
 
 Estas instrucciones te guiarán para obtener una copia de este proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas.
 
-### 📋 Prerrequisitos
+### 📋 Lenguajes y Dependencias del Proyecto
 
-- Sistema Operativo (por ejemplo, Ubuntu 20.04, Windows 10)
-- Lenguaje de programación: Python 3.10+
-- Framework: Django 4.2
-- Base de datos: PostgreSQL 13+
-- Otros...
 
-### 🔧 Instalación
+Lenguaje Principale:
+
+- TypeScript v5.9.3
+
+Dependencias de Desarrollo:
+
+- @types/aws-lambda: ^8.10.156
+- @types/jest: ^30.0.0
+- @types/node: ^24.9.1
+- jest: ^30.2.0
+- serverless-esbuild: ^1.52.1
+- serverless-offline: ^12.0.4
+- serverless-plugin-typescript: ^2.1.5
+- ts-jest: ^29.4.5
+- ts-node: ^10.9.2
+
+Dependencias de Producción:
+
+- @aws-sdk/client-dynamodb: ^3.917.0
+- @aws-sdk/client-sns: ^3.917.0
+- @aws-sdk/lib-dynamodb: ^3.917.0
+- aws-lambda: ^1.0.7
+- mysql2: ^3.15.3
+
+### 🔧 Guía de Instalación del Proyecto
+
+Requisitos Previos:
+
+1. Node.js: v18 o superior
+2. npm: v9 o superior
+3. AWS CLI: Configurado con credenciales
+4. Serverless Framework: Instalación global recomendada
+
+Pasos de Instalación:
 
 ```bash
 # Paso 1: Clonar el repositorio
-git clone https://github.com/your-user/project.git
-cd project
+git clone https://github.com/JohelTec/app-appointment.git
 
-# Paso 2: Crear entorno virtual (opcional)
-python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
+# Paso 2: Entrar al directorio
+cd app_appointment
 
 # Paso 3: Instalar dependencias
-pip install -r requirements.txt
+npm install
 
-# Paso 4: Configurar variables de entorno
-cp .env.example .env
+# Paso 5: Despliege en AWS
+npm run deploy
 
-# Paso 5: Ejecutar la aplicación
-python main.py
 ```
 
 ---
@@ -58,120 +83,138 @@ python main.py
 
 ```bash
 # Ejecutar todas las pruebas
-pytest
+
+npm run test
+npm run test:watch
+npm run test:coverage
 ```
-
-### 🔄 Pruebas de Principio a Fin
-
-Estas pruebas cubren flujos completos de usuario como autenticación, creación de entidades, etc.
-
-### ⌨️ Pruebas de Estilo de Código
-
-```bash
-flake8 .
-black --check .
-```
-
----
 
 ## 📦 Despliegue
 
-Para desplegar este proyecto en un entorno de producción:
+Para desplegar este proyecto en un entorno:
 
-- Crear contenedor Docker (opcional)
-- Configurar servidor (Heroku, Railway, VPS)
-- Ejecutar migraciones y cargar datos iniciales
-- Configurar variables de entorno en producción
+- Crear dos base de datos MYSQL
+    ```bash
+        # Credenciales
+        DB_HOST: xxxxxxx
+        DB_USER: xxxxxxx
+        DB_PASSWORD: xxxxx
+        DB_NAME: appointments_pe
+
+        # SQL creación de base da datos
+        CREATE DATABASE appointments_pe;
+
+        # SQL creación de tabla
+        CREATE TABLE appointments (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            insured_id VARCHAR(20) NOT NULL,        -- ID del asegurado (ej: "00007")
+            schedule_id INT NOT NULL,               -- ID de la agenda o turno
+            center_id INT NOT NULL,                 -- ID del centro médico
+            specialty_id INT NOT NULL,              -- ID de la especialidad
+            medic_id INT NOT NULL,                  -- ID del médico
+            appointment_date DATETIME NOT NULL,     -- Fecha y hora (en UTC o local)
+            country_iso CHAR(2) NOT NULL,           -- Código de país ISO (ej: "CL")
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        );
+
+    ```
+
+    ```bash
+         # Credenciales
+        DB_HOST: xxxxxxx
+        DB_USER: xxxxxxx
+        DB_PASSWORD: xxxxx
+        DB_NAME: appointments_cl
+
+        # SQL creación de base da datos
+        CREATE DATABASE appointments_cl;
+
+        # SQL creación de tabla
+        CREATE TABLE appointments (
+            id BIGINT AUTO_INCREMENT PRIMARY KEY,
+            insured_id VARCHAR(20) NOT NULL,        -- ID del asegurado (ej: "00007")
+            schedule_id INT NOT NULL,               -- ID de la agenda o turno
+            center_id INT NOT NULL,                 -- ID del centro médico
+            specialty_id INT NOT NULL,              -- ID de la especialidad
+            medic_id INT NOT NULL,                  -- ID del médico
+            appointment_date DATETIME NOT NULL,     -- Fecha y hora (en UTC o local)
+            country_iso CHAR(2) NOT NULL,           -- Código de país ISO (ej: "CL")
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        );
+    ```
 
 ---
 
-## 🛠️ Construido Con
 
-- [Python](https://www.python.org/) - Lenguaje de programación
-- [Django](https://www.djangoproject.com/) - Framework web
-- [PostgreSQL](https://www.postgresql.org/) - Sistema de base de datos
-- [Docker](https://www.docker.com/) - Contenedores para despliegue
+## 📚 API Endpoints
 
----
+### Base URL
+```
+https://9d3t3hh0qj.execute-api.us-east-1.amazonaws.com/appointment
+```
+### 1. Registrar Cita
 
-## 🛣️ Roadmap
+**POST** `/appointment`
 
-- [ ] Agregar autenticación por redes sociales
-- [ ] Mejorar rendimiento con caching
-- [ ] Agregar interfaz de usuario responsiva
-- [ ] Panel de administración avanzado
+Registra una nueva cita para un asegurado.
 
----
-
-## 🖇️ Contribuyendo
-
-Las contribuciones son lo que hacen a la comunidad de código abierto un lugar increíble para aprender, inspirar y crear. ¡Cualquier aporte es bienvenido!
-
-```md
-1. Haz fork del repositorio
-2. Crea una rama (`git checkout -b feature/NuevaCaracterística`)
-3. Commit de tus cambios (`git commit -m 'Agrega nueva característica'`)
-4. Push a tu rama (`git push origin feature/NuevaCaracterística`)
-5. Abre un Pull Request
+#### Request Body
+```json
+{
+  "insuredId": "0001",              -- ID del asegurado (ej: "00007")
+  "scheduleId": 100,                -- ID de la agenda o turno
+  "centerId": 4,                    -- ID del centro médico
+  "specialtyId": 3,                 -- ID de la especialidad
+  "medicId": 4,                     -- ID del médico
+  "date": "2024-09-30T12:30:00Z",   -- Fecha y hora (en UTC o local)
+  "countryISO": "PE",               -- Código de país ISO (ej: "CL")
+  "status": "pending"               -- Estado de registro
+}
 ```
 
-Por favor, lee el [CONTRIBUTING.md](.github/CONTRIBUTING.md) para más detalles sobre cómo colaborar.
+#### Response Success (200)
+```json
+{
+  "message":"Se generado la solicitud de la cita"
+}
+```
 
----
 
-## 📖 Wiki
+### 2. Consultar Citas por Asegurado
 
-Puedes encontrar más documentación y guías en nuestra [Wiki](https://github.com/your/project/wiki)
+**GET** `/appointment/{insuredId}`
 
----
+Obtiene todas las citas de un asegurado específico.
 
-## 🛟 Soporte
+#### Response Success (200)
+```json
+{
+    "centerId": 4,
+    "countryISO": "PE",
+    "date": "2024-09-30T12:30:00Z",
+    "insuredId": "00058",
+    "medicId": 4,
+    "scheduleId": 100,
+    "specialtyId": 3,
+    "status": "completed"
+}
+```
 
-Si tienes algún problema o sugerencia, por favor abre un issue [aquí](https://github.com/your/project/issues).
 
----
 
 ## 📌 Versionado
 
-Usamos [Git](https://git-scm.com) para el control de versiones y seguimos [Semantic Versioning](https://semver.org/).
+ 
+        Branch: main
 
-Consulta las [etiquetas del repositorio](https://github.com/your/project/tags) para versiones disponibles.
 
 ---
 
 ## ✒️ Autores
 
-- **Brayan Diaz C** - _Trabajo inicial_ - [Brayan Diaz C](https://github.com/brayandiazc)
-
-Consulta también la lista de [contribuidores](https://github.com/your/project/contributors).
+    Johnny Flores Inga
 
 ---
 
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia [MIT](LICENSE.md).
-
----
-
-## ❤️ Apóyanos
-
-Si te gusta este proyecto y deseas apoyar su desarrollo, puedes hacerlo aquí:
-
-- [GitHub Sponsors](https://github.com/sponsors/brayandiazc)
-- [Ko-fi](https://ko-fi.com/brayandiazc)
-- [Patreon](https://patreon.com/brayandiazc)
-
----
-
-## 🎁 Agradecimientos
-
-Estamos agradecidos por las contribuciones de la comunidad a este proyecto. Si encontraste valor en este trabajo, puedes:
-
-- Compartir el proyecto 📤
-- Invitarnos un café ☕
-- Iniciar un issue o PR 🙌
-- Dejar tu agradecimiento con un comentario 💬
-
----
-
-⌨️ con ❤️ por [Brayan Diaz C](https://github.com/brayandiazc) 😊
