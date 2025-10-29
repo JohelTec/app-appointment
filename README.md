@@ -1,164 +1,179 @@
-echo "# Appointment API Documentation
+# 📌 Título del Proyecto
 
-## Overview
-The **Appointment API** provides endpoints to manage appointments. You can create new appointments and retrieve them by the insured ID.
+Nombre autoexplicativo del proyecto, con una breve descripción clara y directa de lo que hace.
 
-### Base URL
-The base URL for the API is:
-\`\`\`
-https://9d3t3hh0qj.execute-api.us-east-1.amazonaws.com/dev
-\`\`\`
-
-## Authentication
-The API uses **API Key** for authentication. You must pass the API key in the \`x-api-key\` header for every request.
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![Coverage](https://img.shields.io/badge/coverage-95%25-blue)
 
 ---
 
-## Endpoints
+## 🧠 Descripción
 
-### 1. **Get Appointment by Insured ID**
-
-#### \`GET /appointments/{insuredId}\`
-
-Retrieves an appointment by the insured person's ID.
-
-##### Path Parameters:
-- **insuredId** (required): The unique ID of the insured person.
-
-##### Request Example:
-\`\`\`bash
-GET https://9d3t3hh0qj.execute-api.us-east-1.amazonaws.com/dev/appointments/12345
-\`\`\`
-
-##### Response Example (200 OK):
-\`\`\`json
-{
-  "insuredId": "12345",
-  "status": "pending",
-  "createdAt": "2025-10-29T12:00:00Z"
-}
-\`\`\`
-
-##### Response Codes:
-- **200 OK**: Successful response, returns the appointment details.
-- **404 Not Found**: Appointment not found for the provided \`insuredId\`.
-- **500 Internal Server Error**: Something went wrong on the server.
+Una descripción más detallada y técnica del proyecto, incluyendo sus principales características, su propósito y cómo funciona.
 
 ---
 
-### 2. **Create New Appointment**
+## 🖼️ Visuales
 
-#### \`POST /appointments\`
-
-Creates a new appointment for an insured person.
-
-##### Request Body Example:
-\`\`\`json
-{
-  "insuredId": "12345",
-  "status": "pending"
-}
-\`\`\`
-
-##### Request Example:
-\`\`\`bash
-POST https://9d3t3hh0qj.execute-api.us-east-1.amazonaws.com/dev/appointments
-Content-Type: application/json
-x-api-key: YOUR_API_KEY
-
-{
-  "insuredId": "12345",
-  "status": "pending"
-}
-\`\`\`
-
-##### Response Example (201 Created):
-\`\`\`json
-{
-  "insuredId": "12345",
-  "status": "pending",
-  "createdAt": "2025-10-29T12:00:00Z"
-}
-\`\`\`
-
-##### Response Codes:
-- **201 Created**: Appointment created successfully.
-- **400 Bad Request**: Invalid input data (e.g., missing required fields).
-- **500 Internal Server Error**: Something went wrong on the server.
+| Vista principal       | Función destacada           |
+| --------------------- | --------------------------- |
+| ![main](img/main.png) | ![feature](img/feature.gif) |
 
 ---
 
-## Error Handling
+## 🚀 Empezando
 
-### Common Error Responses:
-- **400 Bad Request**: The request is malformed or missing required data.
-- **404 Not Found**: The requested resource could not be found.
-- **500 Internal Server Error**: A server error occurred, please try again later.
+Estas instrucciones te guiarán para obtener una copia de este proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas.
 
----
+### 📋 Prerrequisitos
 
-## Example Requests Using cURL
+- Sistema Operativo (por ejemplo, Ubuntu 20.04, Windows 10)
+- Lenguaje de programación: Python 3.10+
+- Framework: Django 4.2
+- Base de datos: PostgreSQL 13+
+- Otros...
 
-### 1. Get appointment by insured ID:
+### 🔧 Instalación
 
-\`\`\`bash
-curl -X GET https://9d3t3hh0qj.execute-api.us-east-1.amazonaws.com/dev/appointments/12345 \
-  -H "x-api-key: YOUR_API_KEY"
-\`\`\`
+```bash
+# Paso 1: Clonar el repositorio
+git clone https://github.com/your-user/project.git
+cd project
 
-### 2. Create an appointment:
+# Paso 2: Crear entorno virtual (opcional)
+python -m venv venv
+source venv/bin/activate  # En Windows: venv\Scripts\activate
 
-\`\`\`bash
-curl -X POST https://9d3t3hh0qj.execute-api.us-east-1.amazonaws.com/dev/appointments \
-  -H "Content-Type: application/json" \
-  -H "x-api-key: YOUR_API_KEY" \
-  -d '{"insuredId": "12345", "status": "pending"}'
-\`\`\`
+# Paso 3: Instalar dependencias
+pip install -r requirements.txt
 
----
+# Paso 4: Configurar variables de entorno
+cp .env.example .env
 
-## CORS Configuration
-
-CORS has been enabled for this API to allow requests from any origin. The following headers are configured:
-
-- \`Access-Control-Allow-Origin: *\`
-- \`Access-Control-Allow-Methods: GET, POST, OPTIONS\`
-- \`Access-Control-Allow-Headers: Content-Type, x-api-key\`
-
-This ensures that the API can be accessed by clients from different origins without facing CORS issues.
+# Paso 5: Ejecutar la aplicación
+python main.py
+```
 
 ---
 
-## Components
+## 🧪 Ejecutando las Pruebas
 
-### Schemas
+```bash
+# Ejecutar todas las pruebas
+pytest
+```
 
-#### **Appointment** Schema
+### 🔄 Pruebas de Principio a Fin
 
-This schema is used for representing an appointment.
+Estas pruebas cubren flujos completos de usuario como autenticación, creación de entidades, etc.
 
-\`\`\`json
-{
-  "insuredId": "string",
-  "status": "string",  // Possible values: "pending", "completed"
-  "createdAt": "string"  // ISO 8601 date-time format
-}
-\`\`\`
+### ⌨️ Pruebas de Estilo de Código
 
-#### **AppointmentInput** Schema
-
-This schema is used for creating a new appointment.
-
-\`\`\`json
-{
-  "insuredId": "string",  // Required
-  "status": "string"  // Default value: "pending"
-}
-\`\`\`
+```bash
+flake8 .
+black --check .
+```
 
 ---
 
-## Conclusion
+## 📦 Despliegue
 
-The **Appointment API** allows for the creation and management of appointments for insured individuals. Ensure that you pass the correct **API Key** for all requests and follow the proper endpoint structure for retrieving or creating appointments.
-" > README.md
+Para desplegar este proyecto en un entorno de producción:
+
+- Crear contenedor Docker (opcional)
+- Configurar servidor (Heroku, Railway, VPS)
+- Ejecutar migraciones y cargar datos iniciales
+- Configurar variables de entorno en producción
+
+---
+
+## 🛠️ Construido Con
+
+- [Python](https://www.python.org/) - Lenguaje de programación
+- [Django](https://www.djangoproject.com/) - Framework web
+- [PostgreSQL](https://www.postgresql.org/) - Sistema de base de datos
+- [Docker](https://www.docker.com/) - Contenedores para despliegue
+
+---
+
+## 🛣️ Roadmap
+
+- [ ] Agregar autenticación por redes sociales
+- [ ] Mejorar rendimiento con caching
+- [ ] Agregar interfaz de usuario responsiva
+- [ ] Panel de administración avanzado
+
+---
+
+## 🖇️ Contribuyendo
+
+Las contribuciones son lo que hacen a la comunidad de código abierto un lugar increíble para aprender, inspirar y crear. ¡Cualquier aporte es bienvenido!
+
+```md
+1. Haz fork del repositorio
+2. Crea una rama (`git checkout -b feature/NuevaCaracterística`)
+3. Commit de tus cambios (`git commit -m 'Agrega nueva característica'`)
+4. Push a tu rama (`git push origin feature/NuevaCaracterística`)
+5. Abre un Pull Request
+```
+
+Por favor, lee el [CONTRIBUTING.md](.github/CONTRIBUTING.md) para más detalles sobre cómo colaborar.
+
+---
+
+## 📖 Wiki
+
+Puedes encontrar más documentación y guías en nuestra [Wiki](https://github.com/your/project/wiki)
+
+---
+
+## 🛟 Soporte
+
+Si tienes algún problema o sugerencia, por favor abre un issue [aquí](https://github.com/your/project/issues).
+
+---
+
+## 📌 Versionado
+
+Usamos [Git](https://git-scm.com) para el control de versiones y seguimos [Semantic Versioning](https://semver.org/).
+
+Consulta las [etiquetas del repositorio](https://github.com/your/project/tags) para versiones disponibles.
+
+---
+
+## ✒️ Autores
+
+- **Brayan Diaz C** - _Trabajo inicial_ - [Brayan Diaz C](https://github.com/brayandiazc)
+
+Consulta también la lista de [contribuidores](https://github.com/your/project/contributors).
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia [MIT](LICENSE.md).
+
+---
+
+## ❤️ Apóyanos
+
+Si te gusta este proyecto y deseas apoyar su desarrollo, puedes hacerlo aquí:
+
+- [GitHub Sponsors](https://github.com/sponsors/brayandiazc)
+- [Ko-fi](https://ko-fi.com/brayandiazc)
+- [Patreon](https://patreon.com/brayandiazc)
+
+---
+
+## 🎁 Agradecimientos
+
+Estamos agradecidos por las contribuciones de la comunidad a este proyecto. Si encontraste valor en este trabajo, puedes:
+
+- Compartir el proyecto 📤
+- Invitarnos un café ☕
+- Iniciar un issue o PR 🙌
+- Dejar tu agradecimiento con un comentario 💬
+
+---
+
+⌨️ con ❤️ por [Brayan Diaz C](https://github.com/brayandiazc) 😊
