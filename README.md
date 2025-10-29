@@ -15,9 +15,8 @@ Una descripción más detallada y técnica del proyecto, incluyendo sus principa
 
 ## 🖼️ Visuales
 
-| Vista principal       | Función destacada           |
-| --------------------- | --------------------------- |
-| ![main](img/main.png) | ![feature](img/feature.gif) |
+| Vista principal       | 
+| ![main](public/cloud.png) | 
 
 ---
 
