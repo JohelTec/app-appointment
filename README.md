@@ -154,7 +154,7 @@ Para desplegar este proyecto en un entorno:
 ```
 https://9d3t3hh0qj.execute-api.us-east-1.amazonaws.com/appointment
 ```
-### 1. Registrar Cita
+### 1. Registrar cita
 
 **POST** `/appointment`
 
@@ -182,7 +182,7 @@ Registra una nueva cita para un asegurado.
 ```
 
 
-### 2. Consultar Citas por Asegurado
+### 2. Consultar citas
 
 **GET** `/appointment/{insuredId}`
 
