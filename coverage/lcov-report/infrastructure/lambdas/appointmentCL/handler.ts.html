@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/15</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/14</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -91,50 +91,50 @@
 <a name='L26'></a><a href='#L26'>26</a>
 <a name='L27'></a><a href='#L27'>27</a>
 <a name='L28'></a><a href='#L28'>28</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { SQSEvent } from "aws-lambda";
-<span class="cstat-no" title="statement not covered" >import { MySQLAppointmentRepository } from "../../repositories/mysql-appointment.repository";</span>
-<span class="cstat-no" title="statement not covered" >import { EventBridgePublisher } from "../../event/eventbridge.publisher";</span>
-<span class="cstat-no" title="statement not covered" >import { Appointment } from "../../../domain/entities/appointment.entity";</span>
+import { MySQLAppointmentRepository } from "../../repositories/mysql-appointment.repository";
+import { EventBridgePublisher } from "../../event/eventbridge.publisher";
+import { Appointment } from "../../../domain/entities/appointment.entity";
 &nbsp;
-export const <span class="cstat-no" title="statement not covered" >appointmentPE = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >a</span>sync </span>(event: SQSEvent): Promise&lt;void&gt; =&gt; {</span>
-  const repo = <span class="cstat-no" title="statement not covered" >new MySQLAppointmentRepository();</span>
-  const publisher = <span class="cstat-no" title="statement not covered" >new EventBridgePublisher();</span>
+export const appointmentPE = async (event: SQSEvent): Promise&lt;void&gt; =&gt; {
+  const repo = new MySQLAppointmentRepository();
+  const publisher = new EventBridgePublisher();
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  await repo.connect();</span>
+  await repo.connect();
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  for (const record of event.Records) {</span>
-    const snsMessage = <span class="cstat-no" title="statement not covered" >JSON.parse(record.body);</span>
-    const message = <span class="cstat-no" title="statement not covered" >JSON.parse(snsMessage.Message);</span>
-    const appointment = <span class="cstat-no" title="statement not covered" >Appointment.fromJSON(message);</span>
+  for (const record of event.Records) {
+    const snsMessage = JSON.parse(record.body);
+    const message = JSON.parse(snsMessage.Message);
+    const appointment = Appointment.fromJSON(message);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    await repo.save(appointment);</span>
-<span class="cstat-no" title="statement not covered" >    await publisher.publish({</span>
+    await repo.save(appointment);
+    await publisher.publish({
       countryISO: appointment.countryISO,
       insuredId: appointment.insuredId,
       status: "completed",
@@ -142,7 +142,7 @@ export const <span class="cstat-no" title="statement not covered" >appointmentPE
     });
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  await repo.close();</span>
+  await repo.close();
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -151,7 +151,7 @@ export const <span class="cstat-no" title="statement not covered" >appointmentPE
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-10-28T14:20:22.460Z
+                at 2025-10-28T22:47:48.048Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

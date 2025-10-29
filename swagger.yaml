@@ -1,0 +1,92 @@
+openapi: 3.0.0
+info:
+  title: Appointment API
+  description: API for managing appointments
+  version: 1.0.0
+
+servers:
+  - url: https://9d3t3hh0qj.execute-api.us-east-1.amazonaws.com/dev
+
+paths:
+  /appointments/{insuredId}:
+    get:
+      summary: Get appointment by insured ID
+      parameters:
+        - in: path
+          name: insuredId
+          required: true
+          schema:
+            type: string
+          description: ID of the insured person
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '404':
+          description: Appointment not found
+        '500':
+          description: Internal server error
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:YOUR_ACCOUNT_ID:function:Appointment/invocations
+        payloadFormatVersion: "2.0"
+        passthroughBehavior: "when_no_match"
+        responses: {}
+
+  /appointments:
+    post:
+      summary: Create new appointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppointmentInput'
+      responses:
+        '201':
+          description: Appointment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '400':
+          description: Invalid input
+        '500':
+          description: Internal server error
+      x-amazon-apigateway-integration:
+        type: aws_proxy
+        httpMethod: POST
+        uri: arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:YOUR_ACCOUNT_ID:function:Appointment/invocations
+        payloadFormatVersion: "2.0"
+        passthroughBehavior: "when_no_match"
+        responses: {}
+
+components:
+  schemas:
+    Appointment:
+      type: object
+      properties:
+        insuredId:
+          type: string
+        status:
+          type: string
+          enum: [pending, completed]
+        createdAt:
+          type: string
+          format: date-time
+          
+    AppointmentInput:
+      type: object
+      required:
+        - insuredId
+      properties:
+        insuredId:
+          type: string
+        status:
+          type: string
+          enum: [pending, completed]
+          default: pending

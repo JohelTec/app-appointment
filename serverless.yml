@@ -57,6 +57,15 @@ custom:
     sourcemap: true
     external:
       - aws-sdk
+  httpApi:
+    cors:
+      allowedOrigins:
+        - '*'          # Cambia a tu frontend si quieres restringir
+      allowedMethods:
+        - GET
+        - POST
+        - PUT
+        - DELETE
 
 functions:
   # Lambda para agendar cita
