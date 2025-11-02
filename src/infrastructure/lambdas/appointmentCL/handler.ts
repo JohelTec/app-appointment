@@ -3,7 +3,7 @@ import { MySQLAppointmentRepository } from "../../repositories/mysql-appointment
 import { EventBridgePublisher } from "../../event/eventbridge.publisher";
 import { Appointment } from "../../../domain/entities/appointment.entity";
 
-export const appointmentPE = async (event: SQSEvent): Promise<void> => {
+export const appointmentCL = async (event: SQSEvent): Promise<void> => {
   const repository = new MySQLAppointmentRepository();
   const publisher = new EventBridgePublisher();
 
